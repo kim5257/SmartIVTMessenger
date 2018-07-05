@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">스마트 증권 메신저</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="server_url" translatable="false">http://tapp.smartivt.com/</string>
+    <string name="server_url" translatable="false">https://app.smartivt.com/</string>
     <string name="close_ment" translatable="false">한 번 더 누르면 종료합니다.</string>
     <string name="connect_error" translatable="false">서버에 접속할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
     <string name="exit" translatable="false">종료</string>
