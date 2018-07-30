@@ -7,4 +7,6 @@
     <string name="permission_error" translatable="false">카메라 접근이 거부되었습니다.\n카메라를 사용할 수 없습니다.</string>
     <string name="select_image" translatable="false">이미지를 선택하세요</string>
     <string name="exit" translatable="false">종료</string>
+    <string name="download_image" translatable="false">다운로드</string>
+    <string name="downloading_image" translatable="false">다운로드 중...</string>
 </resources>

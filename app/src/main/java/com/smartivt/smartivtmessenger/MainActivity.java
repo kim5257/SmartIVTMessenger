@@ -2,9 +2,11 @@ package com.smartivt.smartivtmessenger;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -19,7 +21,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.ConsoleMessage;
+import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
+import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -159,13 +163,43 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    builder.setCancelable(false);
-                    builder.setMessage(getString(R.string.connect_error));
-                    builder.show();
-                    //super.onReceivedError(view, request, error);
+                    try {
+                        builder.setCancelable(false);
+                        builder.setMessage(getString(R.string.connect_error));
+                        builder.show();
+                        //super.onReceivedError(view, request, error);
+                    }
+                    catch(Exception err) {
+                        // Do nothing.
+                    }
                 }
             }
         });
+
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart ( String url,
+                                            String userAgent,
+                                            String contentDisposition,
+                                            String mimeType,
+                                            long contentLength) {
+                String downloadCaption = getString(R.string.download_image);
+                String downloadingCaption = getString(R.string.downloading_image);
+
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+                request.setDescription(downloadCaption);
+                request.setTitle(URLUtil.guessFileName(url, contentDisposition, mimeType));
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimeType));
+
+                DownloadManager downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+                downloadMgr.enqueue(request);
+                Toast.makeText(getApplicationContext(), downloadingCaption, Toast.LENGTH_LONG).show();
+            }
+        });
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
@@ -336,5 +370,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return ret;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }
