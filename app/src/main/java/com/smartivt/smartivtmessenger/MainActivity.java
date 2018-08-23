@@ -28,6 +28,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraPhotoPath;
+    private int retryCnt = 0;
+    private boolean passedError = false;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -151,10 +154,12 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.d(TAG, "onReceivedError: " + retryCnt);
+
+                // 5번 정도 재 시도
                 webView.loadUrl("about:blank");
 
-                if ( isFinishing() == false ) {
-
+                if (isFinishing() == false) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton(getString(R.string.exit), new DialogInterface.OnClickListener() {
                         @Override
@@ -168,8 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         builder.setMessage(getString(R.string.connect_error));
                         builder.show();
                         //super.onReceivedError(view, request, error);
-                    }
-                    catch(Exception err) {
+                    } catch (Exception err) {
                         // Do nothing.
                     }
                 }
