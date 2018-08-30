@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
@@ -25,6 +27,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         NotificationManager notiMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Log.d(TAG, "onMessageReceived!");
 
         if ( remoteMessage.getData().get("title") != null ) {
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getData().get("title"));
@@ -58,6 +62,17 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                 notify.setContentText(remoteMessage.getData().get("body"));
                 notify.setAutoCancel(true);
 
+                //notify.setDefaults(Notification.DEFAULT_ALL);
+
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                    //notify.setCategory(Notification.CATEGORY_MESSAGE);
+                    //notify.setPriority(Notification.PRIORITY_MAX);
+                    //notify.setVisibility(Notification.VISIBILITY_PRIVATE);
+
+                    //notify.setGroupSummary(true);
+                    //notify.setGroup("DEFAULT_GROUP");
+                }
+
                 int id = NotificationID.getID();
 
                 Log.d(TAG, "id: " + id);
@@ -81,10 +96,27 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             else {
                 Notification.Builder notify = new Notification.Builder(getApplicationContext());
 
+                Log.d(TAG, "Make notification");
+
                 notify.setSmallIcon(R.drawable.ic_stat_notification);
+
                 notify.setContentTitle(remoteMessage.getNotification().getTitle());
                 notify.setContentText(remoteMessage.getNotification().getBody());
-                notify.setAutoCancel(true);
+                //notify.setAutoCancel(true);
+                //notify.setWhen(System.currentTimeMillis()+2000);
+                notify.setDefaults(Notification.DEFAULT_ALL);
+                //notify.setOngoing(true);
+
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                    notify.setCategory(Notification.CATEGORY_MESSAGE);
+                    //notify.setPriority(Notification.PRIORITY_MAX);
+                    notify.setVisibility(Notification.VISIBILITY_PUBLIC);
+
+                    notify.setShowWhen(true);
+
+                    notify.setGroupSummary(true);
+                    notify.setGroup("DEFAULT_GROUP");
+                }
 
                 notiMgr.notify(NotificationID.getID(), notify.build());
             }
