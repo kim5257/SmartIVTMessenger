@@ -1,15 +1,15 @@
 package com.smartivt.smartivtmessenger;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
@@ -20,9 +20,28 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     private static final String TAG = "FirebaseMessaging";
 
-    private final String CHANNEL_ID = "DEFAULT_CHANNEL";
+    private final String CHANNEL_ID = "DEFAULT_CHANNEL_ID";
     private final String CHANNEL_NAME = "Default Channel";
-    private final String GROUP_NAME = "MESSAGE_GROUP";
+
+    @Override
+    public void onNewToken(String s) {
+
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+
+            notificationChannel.setDescription(CHANNEL_NAME);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        Log.d(TAG, "Token: " + s);
+        super.onNewToken(s);
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -46,7 +65,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
                 /*
                 Intent badgeIntent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
-
                 badgeIntent.putExtra("badge_count", 5);
                 badgeIntent.putExtra("badge_count_package_name", getPackageName());
                 badgeIntent.putExtra("badge_count_class_name", getLauncherClassName());
