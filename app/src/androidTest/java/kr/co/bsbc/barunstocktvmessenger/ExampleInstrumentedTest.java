@@ -1,4 +1,4 @@
-package com.smartivt.smartivtmessenger;
+package kr.co.bsbc.barunstocktvmessenger;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.smartivt.smartivtmessenger", appContext.getPackageName());
+        assertEquals("kr.co.bsbc.barunstocktvmessenger", appContext.getPackageName());
     }
 }

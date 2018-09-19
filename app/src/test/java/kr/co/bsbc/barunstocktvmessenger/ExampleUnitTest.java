@@ -1,4 +1,4 @@
-package com.smartivt.smartivtmessenger;
+package kr.co.bsbc.barunstocktvmessenger;
 
 import org.junit.Test;
 

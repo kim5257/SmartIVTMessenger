@@ -1,12 +1,3 @@
 <resources>
-    <string name="app_name">스마트 증권 메신저</string>
-    <string name="default_notification_channel_id" translatable="false">DEFAULT_CHANNEL_ID</string>
-    <string name="server_url" translatable="false">http://app.smartivt.com/</string>
-    <string name="close_ment" translatable="false">한 번 더 누르면 종료합니다.</string>
-    <string name="connect_error" translatable="false">서버에 접속할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
-    <string name="permission_error" translatable="false">카메라 접근이 거부되었습니다.\n카메라를 사용할 수 없습니다.</string>
-    <string name="select_image" translatable="false">이미지를 선택하세요</string>
-    <string name="exit" translatable="false">종료</string>
-    <string name="download_image" translatable="false">다운로드</string>
-    <string name="downloading_image" translatable="false">다운로드 중...</string>
+    <string name="app_name">BarunStockTVMessenger</string>
 </resources>
